@@ -307,6 +307,9 @@ func decodeCodexUpstreamResponse(resp *http.Response) error {
 	if errDecode != nil {
 		return fmt.Errorf("codex executor: decode upstream response: %w", errDecode)
 	}
+	if observer, ok := resp.Body.(cliproxyexecutor.HTTPResponseBodyObserver); ok {
+		decoded = observer.ObserveDecodedHTTPResponseBody(decoded)
+	}
 	resp.Body = decoded
 	resp.Header.Del("Content-Encoding")
 	resp.Header.Del("Content-Length")

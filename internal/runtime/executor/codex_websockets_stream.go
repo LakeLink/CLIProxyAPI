@@ -76,6 +76,7 @@ func (e *CodexWebsocketsExecutor) ExecuteStream(ctx context.Context, auth *clipr
 		sess.connMu.Lock()
 		sess.recoverTransport = cliproxyexecutor.DownstreamWebsocket(ctx)
 		sess.turnContext = ctx
+		sess.transportObserver, _ = opts.ExecutionLifecycle.(cliproxyexecutor.WebSocketTransportObserver)
 		sess.connMu.Unlock()
 	}
 	streamSessionLocked := sess != nil && !isEphemeralSession

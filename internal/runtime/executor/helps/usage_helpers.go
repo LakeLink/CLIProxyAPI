@@ -822,6 +822,14 @@ func (r *usageTTFTReadCloser) Read(p []byte) (int, error) {
 	return n, errRead
 }
 
+// Preserve the transport's post-decode observation hook through TTFT tracking.
+func (r *usageTTFTReadCloser) ObserveDecodedHTTPResponseBody(decoded io.ReadCloser) io.ReadCloser {
+	if observer, ok := r.ReadCloser.(cliproxyexecutor.HTTPResponseBodyObserver); ok {
+		return observer.ObserveDecodedHTTPResponseBody(decoded)
+	}
+	return decoded
+}
+
 func APIKeyFromContext(ctx context.Context) string {
 	if ctx == nil {
 		return ""

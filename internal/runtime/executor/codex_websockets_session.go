@@ -71,6 +71,7 @@ type codexWebsocketSession struct {
 	lifecycleBindMu           sync.Mutex
 	lifecycle                 cliproxyexecutor.ExecutionLifecycle
 	lifecycleModel            string
+	transportObserver         cliproxyexecutor.WebSocketTransportObserver
 
 	writeMu sync.Mutex
 
@@ -235,7 +236,7 @@ var (
 	testWebsocketWriteChunkHook   func(chunkIndex int, totalChunks int)
 )
 
-func (s *codexWebsocketSession) writeMessage(conn *websocket.Conn, msgType int, payload []byte) error {
+func (s *codexWebsocketSession) writeMessage(conn *websocket.Conn, msgType int, payload []byte) (err error) {
 	if s == nil {
 		return fmt.Errorf("codex websockets executor: session is nil")
 	}
@@ -244,6 +245,14 @@ func (s *codexWebsocketSession) writeMessage(conn *websocket.Conn, msgType int, 
 	}
 	s.writeMu.Lock()
 	defer s.writeMu.Unlock()
+	s.connMu.Lock()
+	observer := s.transportObserver
+	s.connMu.Unlock()
+	if observer != nil {
+		if complete := observer.BeginWebSocketWrite(conn.UnderlyingConn(), msgType, payload); complete != nil {
+			defer func() { complete(err) }()
+		}
+	}
 	if testWebsocketWritePayloadHook != nil {
 		testWebsocketWritePayloadHook(conn)
 	}
@@ -790,9 +799,22 @@ func (e *CodexWebsocketsExecutor) readUpstreamLoop(sess *codexWebsocketSession, 
 	if e == nil || sess == nil || conn == nil {
 		return
 	}
+	sess.connMu.Lock()
+	transportObserver := sess.transportObserver
+	sess.connMu.Unlock()
+	if transportObserver != nil {
+		defer transportObserver.EndWebSocketConnection(conn.UnderlyingConn())
+	}
 	for {
 		_ = conn.SetReadDeadline(time.Now().Add(codexResponsesWebsocketIdleTimeout))
 		msgType, payload, errRead := conn.ReadMessage()
+		sess.connMu.Lock()
+		observer := sess.transportObserver
+		sess.connMu.Unlock()
+		if observer != nil {
+			active, _ := sess.activeForConn(conn)
+			observer.ObserveWebSocketRead(conn.UnderlyingConn(), msgType, payload, errRead, active != nil)
+		}
 		if errRead != nil {
 			sess.connMu.Lock()
 			recoverTransport := sess.recoverTransport
