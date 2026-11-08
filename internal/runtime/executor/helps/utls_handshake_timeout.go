@@ -7,36 +7,20 @@ import (
 	"time"
 
 	cliproxyexecutor "github.com/router-for-me/CLIProxyAPI/v8/sdk/cliproxy/executor"
+	"github.com/router-for-me/CLIProxyAPI/v8/sdk/codextls"
 )
-
-// tlsHandshakeTimeoutContextKey carries the opt-in TLS establishment bound
-// through request contexts. The Claude Code round tripper is cached per
-// proxy URL, so the bound cannot live on the transport itself: it is read
-// per dial instead, which also lets config hot reloads take effect
-// without rebuilding cached transports.
-type tlsHandshakeTimeoutContextKey struct{}
 
 // withTLSHandshakeTimeout returns a context carrying the TLS establishment
 // bound. A non-positive timeout leaves the context unchanged (bound
 // disabled), matching the config contract where 0 means off.
 func withTLSHandshakeTimeout(ctx context.Context, timeout time.Duration) context.Context {
-	if ctx == nil || timeout <= 0 {
-		return ctx
-	}
-	return context.WithValue(ctx, tlsHandshakeTimeoutContextKey{}, timeout)
+	return codextls.WithHandshakeTimeout(ctx, timeout)
 }
 
 // tlsHandshakeTimeoutFromContext returns the configured establishment
 // bound, or 0 when the bound is disabled.
 func tlsHandshakeTimeoutFromContext(ctx context.Context) time.Duration {
-	if ctx == nil {
-		return 0
-	}
-	timeout, _ := ctx.Value(tlsHandshakeTimeoutContextKey{}).(time.Duration)
-	if timeout <= 0 {
-		return 0
-	}
-	return timeout
+	return codextls.HandshakeTimeout(ctx)
 }
 
 // tlsHandshakeTimeoutRoundTripper stamps the configured establishment

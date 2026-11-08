@@ -1,0 +1,92 @@
+rustls v0.23.46
+└── hyper-rustls v0.27.7
+    └── codex-rustls-reference v0.1.0 (/home/yiffyi/agent/gl-plugin-turnstate/tmp/privacy-tls/reference)
+        └── codex-rustls-reference feature "default" (command-line)
+    ├── hyper-rustls feature "http1"
+    │   └── reqwest v0.12.28
+    │       ├── reqwest feature "__rustls"
+    │       │   ├── reqwest feature "rustls-tls-native-roots-no-provider"
+    │       │   │   └── reqwest feature "rustls-tls-native-roots"
+    │       │   │       └── codex-rustls-reference v0.1.0 (/home/yiffyi/agent/gl-plugin-turnstate/tmp/privacy-tls/reference) (*)
+    │       │   └── reqwest feature "rustls-tls-webpki-roots-no-provider"
+    │       │       └── reqwest feature "rustls-tls-webpki-roots"
+    │       │           └── reqwest feature "rustls-tls"
+    │       │               └── codex-rustls-reference v0.1.0 (/home/yiffyi/agent/gl-plugin-turnstate/tmp/privacy-tls/reference) (*)
+    │       ├── reqwest feature "__rustls-ring"
+    │       │   ├── reqwest feature "rustls-tls-native-roots" (*)
+    │       │   └── reqwest feature "rustls-tls-webpki-roots" (*)
+    │       ├── reqwest feature "__tls"
+    │       │   ├── reqwest feature "__rustls" (*)
+    │       │   └── reqwest feature "default-tls"
+    │       │       └── reqwest feature "default"
+    │       │           └── codex-rustls-reference v0.1.0 (/home/yiffyi/agent/gl-plugin-turnstate/tmp/privacy-tls/reference) (*)
+    │       ├── reqwest feature "charset"
+    │       │   └── reqwest feature "default" (*)
+    │       ├── reqwest feature "cookies"
+    │       │   └── codex-rustls-reference v0.1.0 (/home/yiffyi/agent/gl-plugin-turnstate/tmp/privacy-tls/reference) (*)
+    │       ├── reqwest feature "default" (*)
+    │       ├── reqwest feature "default-tls" (*)
+    │       ├── reqwest feature "h2"
+    │       │   └── reqwest feature "http2"
+    │       │       └── reqwest feature "default" (*)
+    │       ├── reqwest feature "http2" (*)
+    │       ├── reqwest feature "json"
+    │       │   └── codex-rustls-reference v0.1.0 (/home/yiffyi/agent/gl-plugin-turnstate/tmp/privacy-tls/reference) (*)
+    │       ├── reqwest feature "rustls-tls" (*)
+    │       ├── reqwest feature "rustls-tls-native-roots" (*)
+    │       ├── reqwest feature "rustls-tls-native-roots-no-provider" (*)
+    │       ├── reqwest feature "rustls-tls-webpki-roots" (*)
+    │       ├── reqwest feature "rustls-tls-webpki-roots-no-provider" (*)
+    │       ├── reqwest feature "stream"
+    │       │   └── codex-rustls-reference v0.1.0 (/home/yiffyi/agent/gl-plugin-turnstate/tmp/privacy-tls/reference) (*)
+    │       └── reqwest feature "system-proxy"
+    │           └── reqwest feature "default" (*)
+    ├── hyper-rustls feature "http2"
+    │   └── reqwest feature "http2" (*)
+    ├── hyper-rustls feature "native-tokio"
+    │   └── reqwest feature "rustls-tls-native-roots-no-provider" (*)
+    ├── hyper-rustls feature "ring"
+    │   └── reqwest feature "__rustls-ring" (*)
+    ├── hyper-rustls feature "rustls-native-certs"
+    │   └── hyper-rustls feature "native-tokio" (*)
+    ├── hyper-rustls feature "tls12"
+    │   └── reqwest v0.12.28 (*)
+    ├── hyper-rustls feature "webpki-roots"
+    │   └── hyper-rustls feature "webpki-tokio"
+    │       └── reqwest feature "rustls-tls-webpki-roots-no-provider" (*)
+    └── hyper-rustls feature "webpki-tokio" (*)
+├── rustls feature "aws-lc-rs"
+│   └── rustls feature "aws_lc_rs"
+│       └── codex-rustls-reference v0.1.0 (/home/yiffyi/agent/gl-plugin-turnstate/tmp/privacy-tls/reference) (*)
+│       └── tokio-rustls feature "aws_lc_rs"
+│           └── tokio-rustls feature "default"
+│               └── codex-rustls-reference v0.1.0 (/home/yiffyi/agent/gl-plugin-turnstate/tmp/privacy-tls/reference) (*)
+├── rustls feature "aws_lc_rs" (*)
+├── rustls feature "log"
+│   └── rustls feature "logging"
+│       └── tokio-rustls feature "logging"
+│           └── tokio-rustls feature "default" (*)
+├── rustls feature "logging" (*)
+├── rustls feature "ring"
+│   ├── hyper-rustls feature "ring" (*)
+│   ├── tokio-rustls feature "ring"
+│   │   └── reqwest feature "__rustls-ring" (*)
+│   └── reqwest feature "__rustls-ring" (*)
+├── rustls feature "std"
+│   ├── codex-rustls-reference v0.1.0 (/home/yiffyi/agent/gl-plugin-turnstate/tmp/privacy-tls/reference) (*)
+│   ├── reqwest v0.12.28 (*)
+│   └── tokio-rustls v0.26.4
+│       └── hyper-rustls v0.27.7 (*)
+│       ├── tokio-rustls feature "aws_lc_rs" (*)
+│       ├── tokio-rustls feature "default" (*)
+│       ├── tokio-rustls feature "logging" (*)
+│       ├── tokio-rustls feature "ring" (*)
+│       └── tokio-rustls feature "tls12"
+│           └── reqwest v0.12.28 (*)
+│           ├── hyper-rustls feature "tls12" (*)
+│           └── tokio-rustls feature "default" (*)
+└── rustls feature "tls12"
+    ├── codex-rustls-reference v0.1.0 (/home/yiffyi/agent/gl-plugin-turnstate/tmp/privacy-tls/reference) (*)
+    └── reqwest v0.12.28 (*)
+    ├── hyper-rustls feature "tls12" (*)
+    └── tokio-rustls feature "tls12" (*)

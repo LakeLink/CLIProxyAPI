@@ -32,13 +32,37 @@ const (
 )
 
 func (e *CodexWebsocketsExecutor) dialCodexWebsocket(ctx context.Context, auth *cliproxyauth.Auth, wsURL string, headers http.Header) (*websocket.Conn, *websocketConnectionCloser, *http.Response, error) {
-	dialer := newProxyAwareWebsocketDialer(ctx, e.cfg, auth)
+	target, errTarget := url.Parse(wsURL)
+	if errTarget != nil {
+		return nil, nil, nil, errTarget
+	}
+	dialer, errDialer := helps.NewCodexWebsocketDialer(ctx, e.cfg, auth, target, http.ProxyFromEnvironment)
+	if errDialer != nil {
+		return nil, nil, nil, errDialer
+	}
 	dialer.HandshakeTimeout = codexResponsesWebsocketHandshakeTO
 	dialer.EnableCompression = true
 	if ctx == nil {
 		ctx = context.Background()
 	}
-	conn, resp, err := dialer.DialContext(ctx, wsURL, headers)
+	hooks := cliproxyexecutor.CodexHeaderHooksFromContext(ctx)
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, wsURL, nil)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	request.Header = headers.Clone()
+	if request.Header == nil {
+		request.Header = make(http.Header)
+	}
+	if hooks.Prepare != nil {
+		if err = hooks.Prepare(request); err != nil {
+			return nil, nil, nil, err
+		}
+	}
+	conn, resp, err := dialer.DialContext(ctx, wsURL, request.Header)
+	if hooks.Observe != nil && resp != nil {
+		hooks.Observe(request.URL, resp.Header.Clone())
+	}
 	if err != nil {
 		cliproxyexecutor.MarkUpstreamAttempt(ctx)
 	}
