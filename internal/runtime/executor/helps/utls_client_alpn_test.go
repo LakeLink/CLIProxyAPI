@@ -61,7 +61,7 @@ func newALPNTestConnection(t *testing.T, protocol string, handler http.Handler) 
 		t.Fatal(errDial)
 	}
 	tracked := &alpnTestConn{Conn: conn, closed: make(chan struct{})}
-	tlsConn := tls.UClient(tracked, &tls.Config{ServerName: serverURL.Hostname(), RootCAs: rootCAs}, tls.HelloChrome_Auto)
+	tlsConn := tls.UClient(tracked, &tls.Config{ServerName: serverURL.Hostname(), RootCAs: rootCAs}, tls.HelloChrome_133)
 	t.Cleanup(func() {
 		if errClose := tlsConn.Close(); errClose != nil && !errors.Is(errClose, net.ErrClosed) {
 			t.Errorf("close test TLS connection: %v", errClose)

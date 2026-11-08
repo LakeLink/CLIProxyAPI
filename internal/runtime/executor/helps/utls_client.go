@@ -80,7 +80,7 @@ func (t *utlsRoundTripper) createConnection(ctx context.Context, host, addr stri
 	}
 
 	tlsConfig := &tls.Config{ServerName: host}
-	tlsConn := tls.UClient(conn, tlsConfig, tls.HelloChrome_Auto)
+	tlsConn := tls.UClient(conn, tlsConfig, tls.HelloChrome_133)
 
 	handshakeCtx, cancelHandshake := handshakeContext(ctx)
 	defer cancelHandshake()
